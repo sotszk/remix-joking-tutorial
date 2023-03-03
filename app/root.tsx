@@ -1,4 +1,4 @@
-import { LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import { LiveReload, Outlet, Links } from "@remix-run/react";
 
 import globalStyleUrl from "~/styles/global.css";
