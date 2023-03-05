@@ -5,6 +5,8 @@ import { useActionData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
 
+import ErrorMessage from "~/components/ErrorMessage";
+
 function validateJokeContent(content: string) {
   if (content.length < 10) {
     return `joke が短すぎます`;
@@ -68,9 +70,9 @@ export default function NewJokeRoute() {
             />
           </label>
           {actionData?.fieldErrors?.name ? (
-            <p id="name-error" className="form-validation-error" role="alert">
+            <ErrorMessage id="name-error">
               {actionData.fieldErrors.name}
-            </p>
+            </ErrorMessage>
           ) : null}
         </div>
         <div>
@@ -88,13 +90,9 @@ export default function NewJokeRoute() {
             />
           </label>
           {actionData?.fieldErrors?.content ? (
-            <p
-              id="content-error"
-              className="form-validation-error"
-              role="alert"
-            >
+            <ErrorMessage id="content-error">
               {actionData.fieldErrors.content}
-            </p>
+            </ErrorMessage>
           ) : null}
         </div>
         <div>
