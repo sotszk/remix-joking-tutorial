@@ -21,6 +21,8 @@ export const links: LinksFunction = () => {
   ];
 };
 
+const useScript = false;
+
 export default function App() {
   return (
     <html lang="ja">
@@ -32,7 +34,7 @@ export default function App() {
       <body>
         <Outlet />
         <LiveReload />
-        <Scripts />
+        {useScript && <Scripts />}
       </body>
     </html>
   );
