@@ -25,6 +25,15 @@ export async function getUser(request: Request) {
   }
 }
 
+async function createUser({ username, password }: LoginForm) {
+  const passwordHash = bcrypt.hashSync(password, 10);
+  const user = db.user.create({
+    data: { username, passwordHash },
+  });
+  if (!user) return null;
+  return user;
+}
+
 export async function logout(request: Request) {
   const session = await getUserSession(request);
   return redirect("/login", {
@@ -41,6 +50,12 @@ export async function login({ username, password }: LoginForm) {
   const isCorrectPassword = await bcrypt.compare(password, user.passwordHash);
   if (!isCorrectPassword) return null;
 
+  return { id: user.id, username };
+}
+
+export async function register({ username, password }: LoginForm) {
+  const user = await createUser({ username, password });
+  if (!user) throw redirect("/login");
   return { id: user.id, username };
 }
 
@@ -62,7 +77,6 @@ const storage = createCookieSessionStorage({
 });
 
 async function getUserSession(request: Request) {
-  console.log("get:", request.headers.get("Cookie"));
   return storage.getSession(request.headers.get("Cookie"));
 }
 

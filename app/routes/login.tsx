@@ -3,7 +3,7 @@ import { Link, useActionData, useSearchParams } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
-import { login, createUserSession } from "~/utils/session.server";
+import { login, createUserSession, register } from "~/utils/session.server";
 import ErrorMessage from "~/components/ErrorMessage";
 
 import styleUrl from "~/styles/login.css";
@@ -70,7 +70,6 @@ export const action = async ({ request }: ActionArgs) => {
   switch (loginType) {
     case "login": {
       const user = await login({ username, password });
-      console.log("user", user);
       if (!user) {
         return badRequest({
           fieldErrors: null,
@@ -91,11 +90,16 @@ export const action = async ({ request }: ActionArgs) => {
         });
       }
 
-      return badRequest({
-        fieldErrors: null,
-        fields,
-        formError: `Not implemented`,
-      });
+      const user = await register({ username, password });
+      if (!user) {
+        return badRequest({
+          fieldErrors: null,
+          fields,
+          formError: `ユーザーの作成中に予期せぬエラーが発生しました`,
+        });
+      }
+
+      return createUserSession(user.id, redirectTo);
     }
     default: {
       console.log("field", fields);
