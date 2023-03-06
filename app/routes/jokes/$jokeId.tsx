@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useParams, useCatch } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 
@@ -10,7 +10,7 @@ export const loader = async ({ params }: LoaderArgs) => {
     select: { content: true, name: true },
   });
   if (!joke) {
-    throw new Error("Joke not found");
+    throw new Response(`What a joke! Not found.`, { status: 404 });
   }
   return json({ joke });
 };
@@ -24,5 +24,25 @@ export default function JokeRoute() {
       <p>{data.joke.content}</p>
       <Link to=".">{data.joke.name} Permalink</Link>
     </div>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  const params = useParams();
+  if (caught.status === 404) {
+    return (
+      <div className="error-container">
+        なんかエラー起きてるぜ？ jokeId: {params.jokeId}
+      </div>
+    );
+  }
+  throw new Error(`Unhandled error: ${caught.status}`);
+}
+
+export function ErrorBoundary() {
+  const params = useParams();
+  return (
+    <div className="error-container">{`jokeId ${params.jokeId} のジョークを読み込む際にエラーが発生しました`}</div>
   );
 }
