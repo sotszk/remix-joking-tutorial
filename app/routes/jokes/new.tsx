@@ -4,7 +4,7 @@ import { useActionData, Link, useCatch } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
-import { requireUserSession, getUserId } from "~/utils/session.server";
+import { requireUserId, getUserId } from "~/utils/session.server";
 
 import ErrorMessage from "~/components/ErrorMessage";
 
@@ -29,7 +29,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 export const action = async ({ request }: ActionArgs) => {
-  const userId = await requireUserSession(request);
+  const userId = await requireUserId(request);
   const form = await request.formData();
   const name = form.get("name");
   const content = form.get("content");

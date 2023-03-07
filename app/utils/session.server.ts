@@ -87,7 +87,7 @@ export async function getUserId(request: Request) {
   return userId;
 }
 
-export async function requireUserSession(
+export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname,
 ) {
