@@ -1,6 +1,13 @@
 import type { ReactNode } from "react";
-import type { LinksFunction } from "@remix-run/node";
-import { LiveReload, Outlet, Links, Scripts, useCatch } from "@remix-run/react";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import {
+  LiveReload,
+  Outlet,
+  Links,
+  Scripts,
+  useCatch,
+  Meta,
+} from "@remix-run/react";
 
 import globalStyleUrl from "~/styles/global.css";
 import globalStyleLargeUrl from "~/styles/global-large.css";
@@ -22,6 +29,22 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const meta: MetaFunction = () => {
+  const description = "Remix と笑いを一緒に学習しましょう！";
+
+  return {
+    charset: "utf-8",
+    description,
+    keywords: "Remix,Jokes",
+    "twitter:image": "https://remix-jokes.lol/social.png",
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@remix_run",
+    "twitter:site": "@remix_run",
+    "twitter:title": "Remix Jokes",
+    "twitter:description": description,
+  };
+};
+
 const useScript = false;
 
 function Document({
@@ -34,7 +57,7 @@ function Document({
   return (
     <html lang="ja">
       <head>
-        <meta charSet="utf-8" />
+        <Meta />
         <title>{title}</title>
         <Links />
       </head>

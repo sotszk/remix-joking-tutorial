@@ -1,4 +1,4 @@
-import type { LinksFunction, ActionArgs } from "@remix-run/node";
+import type { LinksFunction, MetaFunction, ActionArgs } from "@remix-run/node";
 import { Link, useActionData, useSearchParams } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
@@ -11,6 +11,11 @@ import styleUrl from "~/styles/login.css";
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styleUrl },
 ];
+
+export const meta: MetaFunction = () => ({
+  title: "Remix Jokes | Login",
+  description: `ログインしてあなたのお気に入りのジョークを登録しましょう！`,
+});
 
 function validateUsername(username: string) {
   if (typeof username !== "string" || username.length < 3) {
