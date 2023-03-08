@@ -45,7 +45,7 @@ export const meta: MetaFunction = () => {
   };
 };
 
-const useScript = false;
+const useScript = true;
 
 function Document({
   children,
