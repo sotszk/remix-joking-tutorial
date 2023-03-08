@@ -4,6 +4,7 @@ import { Link, useLoaderData, useParams, useCatch } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { requireUserId, getUserId } from "~/utils/session.server";
+import JokeDisplay from "~/components/Joke";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) {
@@ -60,23 +61,9 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 
 export default function JokeRoute() {
   const data = useLoaderData<typeof loader>();
-
   const isOwner = data.joke.jokesterId === data.userId;
 
-  return (
-    <div>
-      <p>Here's your hilarious joke:</p>
-      <p>{data.joke.content}</p>
-      <Link to=".">{data.joke.name} Permalink</Link>
-      {isOwner && (
-        <form method="post">
-          <button type="submit" name="intent" value="delete" className="button">
-            Delete
-          </button>
-        </form>
-      )}
-    </div>
-  );
+  return <JokeDisplay isOwner={isOwner} joke={data.joke} />;
 }
 
 export function CatchBoundary() {

@@ -1,12 +1,19 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
-import { useActionData, Link, useCatch, Form } from "@remix-run/react";
+import {
+  useActionData,
+  Link,
+  useCatch,
+  Form,
+  useNavigation,
+} from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { badRequest } from "~/utils/request.server";
 import { requireUserId, getUserId } from "~/utils/session.server";
 
 import ErrorMessage from "~/components/ErrorMessage";
+import JokeDisplay from "~/components/Joke";
 
 function validateJokeContent(content: string) {
   if (content.length < 10) {
@@ -63,6 +70,27 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function NewJokeRoute() {
   const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
+
+  // Optimistic UI!
+  if (navigation.formData) {
+    const name = navigation.formData.get("name");
+    const content = navigation.formData.get("content");
+    if (
+      typeof name === "string" &&
+      typeof content === "string" &&
+      !validateJokeName(name) &&
+      !validateJokeContent(content)
+    ) {
+      return (
+        <JokeDisplay
+          joke={{ name, content }}
+          isOwner={true}
+          canDelete={false}
+        />
+      );
+    }
+  }
 
   return (
     <div>
